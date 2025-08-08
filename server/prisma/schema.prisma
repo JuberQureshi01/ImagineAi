@@ -1,0 +1,103 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+
+enum Plan {
+  free
+  pro
+}
+
+// --- Database Models ---
+
+model User {
+  id           String  @id @default(cuid())
+  email        String  @unique
+  name         String
+  passwordHash String 
+  imageUrl     String? 
+
+  plan             Plan     @default(free)
+  projectsUsed     Int      @default(0)
+  exportsThisMonth Int      @default(0)
+  lastActiveAt     DateTime @default(now())
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  projects Project[]
+  folders  Folder[]
+  Payment  Payment[]
+
+  @@index([email])
+}
+
+model Project {
+  id       String  @id @default(cuid())
+  title    String
+  userId   String 
+  folderId String? 
+
+  imagekitId String
+  // Canvas state and dimensions
+  canvasState Json? // The 'Json' type is perfect for storing Fabric.js state
+  width       Int
+  height      Int
+
+  // Image URLs
+  originalImageUrl      String?
+  currentImageUrl       String?
+  thumbnailUrl          String?
+  activeTransformations String?
+
+  backgroundRemoved Boolean?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user   User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  folder Folder? @relation(fields: [folderId], references: [id], onDelete: SetNull) // If folder is deleted, set project's folderId to null
+
+  @@index([userId])
+  @@index([folderId])
+}
+
+model Folder {
+  id     String @id @default(cuid())
+  name   String
+  userId String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  user     User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  projects Project[]
+  @@index([userId])
+}
+
+model Payment {
+  id     String @id @default(cuid())
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+
+  razorpayPaymentId String @unique
+  razorpayOrderId   String @unique
+  razorpaySignature String
+
+  amount   Int 
+  currency String
+  status   String 
+
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+}
