@@ -1,7 +1,7 @@
 import axios from 'axios';
 
  const api = axios.create({
-  baseURL: 'https://imagineai-il4p.onrender.com',
+  baseURL: 'https://imagineaii.onrender.com',
   headers: {
     'Content-Type': 'application/json',
   },
