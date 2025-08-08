@@ -8,7 +8,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-app.get('/', (req, res) => res.send('AI Photo Editor API is running...'));
+app.get('/test', (req, res) => res.send('AI Photo Editor API is running...'));
 
 app.use('/api/auth', require('./routes/auth'));
 app.use('/api/projects', require('./routes/projects')); 
