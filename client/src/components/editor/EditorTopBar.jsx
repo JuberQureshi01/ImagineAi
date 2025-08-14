@@ -19,6 +19,7 @@ import {
   Lock,
   Wand2,
   Zap,
+  Eraser,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -46,6 +47,8 @@ const TOOLS = [
   { id: "background", label: "Background", icon: Palette, proOnly: true },
   { id: "ai_extender", label: "AI Extender", icon: Maximize2, proOnly: true },
   { id: "ai_edit", label: "AI Retouch", icon: Eye, proOnly: true },
+  { id: "cleanup", label: "Cleanup", icon: Eraser, proOnly: true },
+
 ];
 
 const EXPORT_FORMATS = [
@@ -197,6 +200,7 @@ export function EditorTopBar({ project }) {
       });
       toast.success("Project saved successfully!");
     } catch (error) {
+      console.log(error)
       toast.error("Failed to save project.");
     } finally {
       setIsSaving(false);
@@ -294,6 +298,7 @@ export function EditorTopBar({ project }) {
       <div className="border-b px-4 py-2 bg-slate-800 text-white">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
+            
             <Button
               variant="ghost"
               size="sm"
@@ -308,7 +313,7 @@ export function EditorTopBar({ project }) {
             {project.title}
           </h1>
           <div className="flex items-center gap-2">
-             <Button
+            <Button
               variant="outline"
               size="sm"
               onClick={handleResetToOriginal}

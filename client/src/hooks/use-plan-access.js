@@ -3,16 +3,16 @@ import { useAuth } from '@/context/AuthContext';
 
 export function usePlanAccess() {
   const { user } = useAuth();
-
   const isPro = user?.plan === 'pro';
   const isFree = !isPro;
 
   const planAccess = {
     resize: true,
     crop: true,
+    filters: true,
     adjust: true,
     text: true,
-    filters: true,
+    generative_edit: isPro,  
     background: isPro,
     ai_extender: isPro,
     ai_edit: isPro,
@@ -20,7 +20,7 @@ export function usePlanAccess() {
 
   const hasAccess = (toolId) => {
     if (!toolId || planAccess[toolId] === undefined) {
-        return false;
+      return false;
     }
     return planAccess[toolId] === true;
   };
@@ -33,8 +33,7 @@ export function usePlanAccess() {
 
   const canCreateProject = (currentProjectCount) => {
     if (isPro) return true;
-    if (!user) return false; 
-    
+    if (!user) return false;
     return currentProjectCount < 3;
   };
 

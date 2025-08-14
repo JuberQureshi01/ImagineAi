@@ -11,6 +11,7 @@ import {
   Zap,
   Wand2,
   X,
+  Eraser,
 } from "lucide-react";
 import { useCanvas } from "@/context/CanvasContext";
 import { AdjustControls } from "./tools/AdjustControls";
@@ -21,6 +22,8 @@ import { CropControls } from "./tools/CropControls";
 import { ResizeControls } from "./tools/ResizeControls";
 import { TextControls } from "./tools/TextControls";
 import { FilterControls } from "./tools/FilterControls";
+import { ImageGeneratorModal } from "../ImageGeneratorModal";
+import { CleanupControls } from "./CleanupControls";
 
 const TOOL_CONFIGS = {
   resize: {
@@ -60,6 +63,18 @@ const TOOL_CONFIGS = {
     title: "AI Retouch",
     icon: Eye,
     description: "Enhance image quality with AI",
+    proOnly: true,
+  },
+  cleanup: {
+    title: "AI Cleanup",
+    icon: Eraser,
+    description: "Remove unwanted objects",
+    proOnly: true,
+  },
+  generative_edit: {
+    title: "Generative Edit",
+    icon: Wand2,
+    description: "Describe your desired edit",
     proOnly: true,
   },
 };
@@ -108,12 +123,16 @@ function renderToolContent(activeTool, project) {
       return <AIExtenderControls project={project} />;
     case "background":
       return <BackgroundControls project={project} />;
+    case "cleanup":
+      return <CleanupControls />;
     case "crop":
       return <CropControls />;
     case "resize":
       return <ResizeControls project={project} />;
     case "text":
       return <TextControls />;
+    case "generative_edit":
+      return <ImageGeneratorModal project={project} />;
     case "filters":
       return <FilterControls />;
     default:

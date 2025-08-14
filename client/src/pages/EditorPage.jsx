@@ -1,7 +1,6 @@
-
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { Loader2, Monitor } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import { EditorTopBar } from "@/components/editor/EditorTopBar";
 import { EditorSidebar } from "@/components/editor/EditorSidebar";
 import { CanvasEditor } from "@/components/editor/CanvasEditor";
@@ -51,8 +50,13 @@ export default function EditorPage() {
     return (
       <div className="min-h-screen bg-slate-900 flex items-center justify-center">
         <div className="text-center">
-          <h1 className="text-2xl font-bold text-white mb-2">Project Not Found</h1>
-          <p className="text-white/70">The project you're looking for doesn't exist or you don't have access to it.</p>
+          <h1 className="text-2xl font-bold text-white mb-2">
+            Project Not Found
+          </h1>
+          <p className="text-white/70">
+            The project you're looking for doesn't exist or you don't have
+            access to it.
+          </p>
         </div>
       </div>
     );
@@ -77,22 +81,24 @@ export default function EditorPage() {
                 <RingLoader color="#fff" />
                 <div className="text-center">
                   <p className="text-white font-medium">{processingMessage}</p>
-                  <p className="text-white/70 text-sm mt-1">Please wait, do not switch tabs or navigate away</p>
+                  <p className="text-white/70 text-sm mt-1">
+                    Please wait, do not switch tabs or navigate away
+                  </p>
                 </div>
               </div>
             </div>
           )}
-          
+
           <EditorTopBar project={project} />
 
           <div className="flex flex-1 overflow-hidden">
             <EditorSidebar project={project} />
-            
+
             <div className="flex-1 bg-slate-800">
               <CanvasEditor project={project} />
             </div>
           </div>
-          
+
           <MobileToolbar />
         </div>
       </div>

@@ -5,10 +5,12 @@ import { NewProjectModal } from "@/components/NewProjectModal";
 import { ProjectGrid } from "@/components/ProjectGrid";
 import api from "@/services/api";
 import { toast } from "sonner";
+import { ImageGeneratorModal } from "@/components/ImageGeneratorModal";
 import { useAuth } from "@/context/AuthContext";
 
 export default function DashboardPage() {
   const [showNewProjectModal, setShowNewProjectModal] = useState(false);
+  const [showGeneratorModal, setShowGeneratorModal] = useState(false);
   const [projects, setProjects] = useState([]);
   const [isFetching, setIsFetching] = useState(true);
   const { user, loading: authLoading } = useAuth();
@@ -39,6 +41,7 @@ export default function DashboardPage() {
   const handleProjectCreated = (newProject) => {
     setProjects([newProject, ...projects]);
     setShowNewProjectModal(false);
+    setShowGeneratorModal(false); // Also close the generator modal
   };
 
   const handleProjectDeleted = (deletedProjectId) => {
@@ -60,6 +63,15 @@ export default function DashboardPage() {
             </p>
           </div>
           <div className="flex items-center gap-4">
+            <Button
+              onClick={() => setShowGeneratorModal(true)}
+              variant="outline"
+              size="lg"
+              className="gap-2"
+            >
+              <Wand2 className="h-5 w-5" />
+              Generate Image
+            </Button>
             <Button
               onClick={() => setShowNewProjectModal(true)}
               variant="primary"
@@ -88,6 +100,11 @@ export default function DashboardPage() {
           onClose={() => setShowNewProjectModal(false)}
           onProjectCreated={handleProjectCreated}
           currentProjectCount={projects.length}
+        />
+        <ImageGeneratorModal
+          isOpen={showGeneratorModal}
+          onClose={() => setShowGeneratorModal(false)}
+          onProjectCreated={handleProjectCreated}
         />
       </div>
     </div>
