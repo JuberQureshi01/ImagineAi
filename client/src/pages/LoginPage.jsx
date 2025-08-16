@@ -33,7 +33,7 @@ export default function LoginPage() {
           </p>
         </div>
         <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
+          <div className="flex flex-col gap-1">
             <Label htmlFor="email">Email Address</Label>
             <Input
               id="email"
@@ -45,7 +45,7 @@ export default function LoginPage() {
               autoComplete="email"
             />
           </div>
-          <div>
+          <div className="flex flex-col gap-1">
             <Label htmlFor="password">Password</Label>
             <Input
               id="password"

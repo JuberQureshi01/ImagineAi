@@ -1,4 +1,3 @@
-
 import React, { useEffect, useRef, useState } from "react";
 import { Canvas, FabricImage } from "fabric";
 import { useCanvas } from "@/context/CanvasContext";
@@ -7,7 +6,6 @@ import api from "@/services/api";
 export function CanvasEditor({ project }) {
   const canvasRef = useRef(null);
   const containerRef = useRef(null);
-  // This ref will hold the Fabric instance and persist across re-renders
   const canvasInstanceRef = useRef(null);
   const { setCanvasEditor, activeTool, onToolChange } = useCanvas();
   const [isLoading, setIsLoading] = useState(true);
@@ -28,7 +26,7 @@ export function CanvasEditor({ project }) {
   const calculateViewportScale = () => {
     if (!containerRef.current || !project) return 1;
     const container = containerRef.current;
-    const padding = 40;
+    const padding = 20; // smaller padding for responsiveness
     const containerWidth = container.clientWidth - padding;
     const containerHeight = container.clientHeight - padding;
     const scaleX = containerWidth / project.width;
@@ -40,45 +38,57 @@ export function CanvasEditor({ project }) {
     if (!canvasRef.current) return;
 
     const canvas = new Canvas(canvasRef.current, {
-        width: project.width,
-        height: project.height,
-        backgroundColor: "#ffffff",
-        preserveObjectStacking: true,
+      width: project.width,
+      height: project.height,
+      backgroundColor: "#ffffff",
+      preserveObjectStacking: true,
     });
-    
+
     canvasInstanceRef.current = canvas;
     setCanvasEditor(canvas);
 
     const initializeContent = async () => {
-        setIsLoading(true);
-        const viewportScale = calculateViewportScale();
-        canvas.setDimensions({
-            width: project.width * viewportScale,
-            height: project.height * viewportScale,
-        });
-        canvas.setZoom(viewportScale);
+      setIsLoading(true);
+      const viewportScale = calculateViewportScale();
+      canvas.setDimensions({
+        width: project.width * viewportScale,
+        height: project.height * viewportScale,
+      });
+      canvas.setZoom(viewportScale);
 
-        if (project.canvasState && typeof project.canvasState === 'object') {
-            try {
-                await canvas.loadFromJSON(project.canvasState);
-            } catch (error) {
-                console.error("Error loading canvas state:", error);
-            }
-        } else if (project.currentImageUrl || project.originalImageUrl) {
-            try {
-                const imageUrl = project.currentImageUrl || project.originalImageUrl;
-                const fabricImage = await FabricImage.fromURL(imageUrl, { crossOrigin: "anonymous" });
-                const scale = Math.min(project.width / fabricImage.width, project.height / fabricImage.height);
-                fabricImage.set({ left: project.width / 2, top: project.height / 2, originX: "center", originY: "center", scaleX: scale, scaleY: scale });
-                canvas.add(fabricImage);
-                canvas.centerObject(fabricImage);
-            } catch (error) {
-                console.error("Error loading project image:", error);
-            }
+      if (project.canvasState && typeof project.canvasState === "object") {
+        try {
+          await canvas.loadFromJSON(project.canvasState);
+        } catch (error) {
+          console.error("Error loading canvas state:", error);
         }
+      } else if (project.currentImageUrl || project.originalImageUrl) {
+        try {
+          const imageUrl = project.currentImageUrl || project.originalImageUrl;
+          const fabricImage = await FabricImage.fromURL(imageUrl, {
+            crossOrigin: "anonymous",
+          });
+          const scale = Math.min(
+            project.width / fabricImage.width,
+            project.height / fabricImage.height
+          );
+          fabricImage.set({
+            left: project.width / 2,
+            top: project.height / 2,
+            originX: "center",
+            originY: "center",
+            scaleX: scale,
+            scaleY: scale,
+          });
+          canvas.add(fabricImage);
+          canvas.centerObject(fabricImage);
+        } catch (error) {
+          console.error("Error loading project image:", error);
+        }
+      }
 
-        canvas.requestRenderAll();
-        setIsLoading(false);
+      canvas.requestRenderAll();
+      setIsLoading(false);
     };
 
     initializeContent();
@@ -90,7 +100,7 @@ export function CanvasEditor({ project }) {
         canvasInstanceRef.current = null;
       }
     };
-  }, [project.id]); 
+  }, [project.id]);
 
   const canvasEditor = canvasInstanceRef.current;
 
@@ -101,27 +111,39 @@ export function CanvasEditor({ project }) {
       clearTimeout(saveTimeout);
       saveTimeout = setTimeout(() => saveCanvasState(canvasEditor), 2000);
     };
-    canvasEditor.on({ "object:modified": handleCanvasChange, "object:added": handleCanvasChange, "object:removed": handleCanvasChange });
+    canvasEditor.on({
+      "object:modified": handleCanvasChange,
+      "object:added": handleCanvasChange,
+      "object:removed": handleCanvasChange,
+    });
     return () => {
-        if (canvasEditor) {
-            clearTimeout(saveTimeout);
-            canvasEditor.off({ "object:modified": handleCanvasChange, "object:added": handleCanvasChange, "object:removed": handleCanvasChange });
-        }
+      if (canvasEditor) {
+        clearTimeout(saveTimeout);
+        canvasEditor.off({
+          "object:modified": handleCanvasChange,
+          "object:added": handleCanvasChange,
+          "object:removed": handleCanvasChange,
+        });
+      }
     };
   }, [canvasEditor]);
 
   useEffect(() => {
     if (!canvasEditor) return;
-    const cursor = activeTool === 'crop' ? 'crosshair' : 'default';
+    const cursor = activeTool === "crop" ? "crosshair" : "default";
     canvasEditor.defaultCursor = cursor;
-    canvasEditor.hoverCursor = activeTool === 'crop' ? 'crosshair' : 'move';
+    canvasEditor.hoverCursor =
+      activeTool === "crop" ? "crosshair" : "move";
   }, [canvasEditor, activeTool]);
 
   useEffect(() => {
     const handleResize = () => {
       if (!canvasEditor || !project) return;
       const newScale = calculateViewportScale();
-      canvasEditor.setDimensions({ width: project.width * newScale, height: project.height * newScale });
+      canvasEditor.setDimensions({
+        width: project.width * newScale,
+        height: project.height * newScale,
+      });
       canvasEditor.setZoom(newScale);
       canvasEditor.requestRenderAll();
     };
@@ -136,24 +158,40 @@ export function CanvasEditor({ project }) {
         onToolChange("text");
       }
     };
-    canvasEditor.on({ "selection:created": handleSelection, "selection:updated": handleSelection });
+    canvasEditor.on({
+      "selection:created": handleSelection,
+      "selection:updated": handleSelection,
+    });
     return () => {
-        if (canvasEditor) {
-            canvasEditor.off({ "selection:created": handleSelection, "selection:updated": handleSelection });
-        }
+      if (canvasEditor) {
+        canvasEditor.off({
+          "selection:created": handleSelection,
+          "selection:updated": handleSelection,
+        });
+      }
     };
   }, [canvasEditor, onToolChange]);
 
   return (
-    <div ref={containerRef} className="relative flex items-center justify-center bg-slate-800 w-full h-full overflow-hidden">
+    <div
+      ref={containerRef}
+      className="relative flex items-center justify-center bg-slate-800 w-full h-full overflow-hidden"
+    >
+      {/* Background grid */}
       <div
         className="absolute inset-0 opacity-10 pointer-events-none"
         style={{
-          backgroundImage: `linear-gradient(45deg, #475569 25%, transparent 25%), linear-gradient(-45deg, #475569 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #475569 75%), linear-gradient(-45deg, transparent 75%, #475569 75%)`,
+          backgroundImage: `linear-gradient(45deg, #475569 25%, transparent 25%), 
+                            linear-gradient(-45deg, #475569 25%, transparent 25%), 
+                            linear-gradient(45deg, transparent 75%, #475569 75%), 
+                            linear-gradient(-45deg, transparent 75%, #475569 75%)`,
           backgroundSize: "20px 20px",
-          backgroundPosition: "0 0, 0 10px, 10px -10px, -10px 0px",
+          backgroundPosition:
+            "0 0, 0 10px, 10px -10px, -10px 0px",
         }}
       />
+
+      {/* Loading overlay */}
       {isLoading && (
         <div className="absolute inset-0 flex items-center justify-center bg-slate-800/80 z-10">
           <div className="flex flex-col items-center gap-4">
@@ -162,8 +200,26 @@ export function CanvasEditor({ project }) {
           </div>
         </div>
       )}
-      <div className="p-5 shadow-lg">
-        <canvas key={project.id} id="canvas" className="rounded-md" ref={canvasRef} />
+
+      {/* Responsive canvas wrapper */}
+      <div className="flex w-full h-full items-center justify-center">
+        <div
+          className="
+            shadow-lg rounded-md overflow-hidden 
+            w-[90vw] h-[60vh]       
+            sm:w-[80vw] sm:h-[70vh] 
+            lg:w-[70vw] lg:h-[80vh] 
+            2xl:w-[60vw] 2xl:h-[85vh] 
+            flex items-center justify-center
+          "
+        >
+          <canvas
+            key={project.id}
+            id="canvas"
+            className="w-full h-full"
+            ref={canvasRef}
+          />
+        </div>
       </div>
     </div>
   );

@@ -22,9 +22,9 @@ export default function Header() {
 
   return (
     <header className="fixed top-6 left-1/2 transform -translate-x-1/2 z-50 text-nowrap">
-      <div className="backdrop-blur-md bg-white/10 border border-white/20 rounded-full px-8 py-3 flex items-center justify-between gap-8">
+      <div className="backdrop-blur-md bg-white/10 border border-white/20 rounded-full px-6 py-2 sm:px-8 sm:py-3 flex items-center justify-between gap-8">
         <Link to="/" className="mr-10 md:mr-20">
-          <div className="text-3xl italic tracking-tighter">
+          <div className=" text-xl sm:text-3xl italic tracking-tighter">
             <span className="bg-gradient-to-r from-cyan-400 to-purple-500 bg-clip-text text-transparent">
               Imagine
             </span>
@@ -83,7 +83,7 @@ export default function Header() {
                   Sign In
                 </Button>
               </Link>
-              <Link to="/register">
+              <Link to="/register" className="text-[12px] sm:text-sm" >
                 <Button variant="primary">Get Started</Button>
               </Link>
             </>

@@ -30,16 +30,16 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gray-900 text-white">
-      <div className="w-full max-w-md p-8 space-y-6 bg-gray-800 rounded-2xl shadow-lg">
+    <div className="flex justify-center items-center min-h-screen bg-gray-900 text-white " >
+      <div className=" mt-12 p-2 space-y-2 w-full max-w-md sm:p-6 sm:space-y-6 bg-gray-800 rounded-2xl shadow-lg  ">
         <div className="text-center">
-          <h1 className="text-3xl font-bold">Create an Account</h1>
+          <h1 className=" text-3xl font-semibold sm:font-bold">Create an Account</h1>
           <p className="text-gray-400">
             Join us and start creating amazing images.
           </p>
         </div>
         <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
+          <div className="flex flex-col gap-1 px-3 sm:px-0 " >
             <Label htmlFor="name">Full Name</Label>
             <Input
               id="name"
@@ -51,7 +51,7 @@ export default function RegisterPage() {
               autoComplete="name"
             />
           </div>
-          <div>
+          <div className="flex flex-col gap-1 px-3 sm:px-0">
             <Label htmlFor="email">Email Address</Label>
             <Input
               id="email"
@@ -63,7 +63,7 @@ export default function RegisterPage() {
               autoComplete="email"
             />
           </div>
-          <div>
+          <div className="flex flex-col gap-1 px-3 sm:px-0">
             <Label htmlFor="password">Password</Label>
             <Input
               id="password"
@@ -75,7 +75,7 @@ export default function RegisterPage() {
               autoComplete="new-password"
             />
           </div>
-          <div>
+          <div className="flex flex-col gap-1 px-3 sm:px-0">
             <Label htmlFor="confirmPassword">Confirm Password</Label>
             <Input
               id="confirmPassword"
@@ -89,7 +89,7 @@ export default function RegisterPage() {
           </div>
           <Button
             type="submit"
-            className="w-full !mt-6 bg-cyan-500 hover:bg-cyan-600"
+            className="w-full !mt-6 bg-cyan-500 hover:bg-cyan-600 "
           >
             Create Account
           </Button>

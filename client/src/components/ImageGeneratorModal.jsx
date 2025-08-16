@@ -40,6 +40,7 @@ const IMAGE_STYLES = [
   { value: "3d-model", label: "3D Model" },
   { value: "digital-art", label: "Digital Art" },
   { value: "comic-book", label: "Comic Book" },
+  { value: "Ghibli-art", label: "Ghibli Art" },
   { value: "fantasy-art", label: "Fantasy Art" },
 ];
 
